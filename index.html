@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Store run</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0050aa">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Store run">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+
+<style>
+:root{--bg:#eef2f8;--ink:#0b1f4d;--mute:#5b6a8c;--card:#fff;--line:#d3dcec;--acc:#0050aa;--onacc:#fff;--warm:#f58220;--onwarm:#2a1500;--warmbg:#fff3e6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1226;--ink:#e8eefc;--mute:#97a6c9;--card:#121c38;--line:#243256;--acc:#6aa8ff;--onacc:#06122b;--warm:#ffa24d;--onwarm:#2a1500;--warmbg:#2a2113}}
+:root[data-theme="dark"]{--bg:#0a1226;--ink:#e8eefc;--mute:#97a6c9;--card:#121c38;--line:#243256;--acc:#6aa8ff;--onacc:#06122b;--warm:#ffa24d;--onwarm:#2a1500;--warmbg:#2a2113}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding-bottom:84px}
+main{max-width:560px;margin:0 auto;padding:16px}
+h2{font-size:1.4rem;margin:8px 0 14px;letter-spacing:-.01em}
+h3{font-size:1.05rem;margin:20px 0 6px}
+h3 small{font-weight:400;color:var(--mute);margin-left:6px}
+button,select,input{font:inherit;color:inherit}
+button{min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--card);border-radius:10px;cursor:pointer}
+button.pri{background:var(--acc);color:var(--onacc);border-color:var(--acc);font-weight:600}
+button.ghost{border-color:transparent;background:transparent;color:var(--mute);min-width:44px}
+button.danger{color:#c0392b}
+input[type=text],input[type=number],select{min-height:44px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);width:100%}
+label.f{display:block;margin:0 0 12px;font-weight:600}
+label.f input,label.f select{margin-top:4px;font-weight:400}
+textarea{width:100%;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:4px;font-weight:400}
+.ok{color:var(--acc);font-weight:600}
+input[type=checkbox]{width:26px;height:26px;accent-color:var(--acc);flex:none}
+.row{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.card .grow{flex:1;min-width:0}
+.card small,.mute{color:var(--mute)}
+.empty{color:var(--mute);padding:20px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 2px 2px 12px}
+.chip select{width:auto;min-height:36px;border:0;background:var(--bg);border-radius:999px;padding:0 6px}
+.chip button{min-height:36px;min-width:36px;padding:0;border:0;background:none}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;min-height:4px}
+.sugg .new{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.dish{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 8px}
+.dish.on{border-color:var(--acc)}
+.dish span{flex:1}
+.dish .kc{flex:none;color:var(--mute);font-weight:600;white-space:nowrap}
+.total{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--acc);color:var(--onacc);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:1.05rem}
+.total small{opacity:.85;font-weight:400}
+.item{list-style:none;display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;margin:0 0 6px;padding:2px 4px 2px 12px}
+.item label{flex:1;display:flex;align-items:center;gap:12px;min-height:52px;cursor:pointer}
+.item.shared{border-left-color:var(--warm);background:var(--warmbg)}
+.item.extra{border-left-color:var(--acc)}
+.item.done .nm{text-decoration:line-through;opacity:.45}
+.nm{display:flex;flex-direction:column;font-weight:600}
+.nm small{font-weight:400;color:var(--mute)}
+.badge{font-style:normal;display:inline-block;margin-left:8px;background:var(--warm);color:var(--onwarm);border-radius:6px;padding:0 7px;font-size:.9rem}
+.item select{width:auto;max-width:150px;min-height:40px}
+ul{padding:0;margin:0}
+.catcard{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;min-height:60px;margin:0 0 8px;padding:10px 14px;font-size:1.05rem}
+.catcard small{display:block;color:var(--mute);font-weight:400}
+.back{margin:-6px 0 0 -14px}
+.wide{width:100%}
+.zrow{display:grid;grid-template-columns:64px 1fr auto auto auto;gap:6px;align-items:center;margin-bottom:8px}
+.zrow button{min-width:40px;padding:0}
+.zrow.cat{grid-template-columns:1fr auto}
+details{margin-top:20px}
+summary{cursor:pointer;color:var(--mute);min-height:44px;display:flex;align-items:center}
+.prog{color:var(--mute);margin:-8px 0 8px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px}
+.seg button[aria-pressed=true]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.err{color:#c0392b;margin:0 0 8px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;border-radius:0;background:none;min-height:60px;color:var(--mute)}
+nav button.on{color:var(--acc);font-weight:700;box-shadow:inset 0 3px 0 var(--acc)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav>
+<button data-t="dishes">Dishes</button><button data-t="plan">Plan</button><button data-t="list">List</button><button data-t="zones">Zones</button><button data-t="backup">Backup</button>
+</nav>
+<script>
+const K='store-run-v1';
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s);
+const defZones=['1A','1B',...Array.from({length:14},(_,i)=>String(i+2))].map((l,i)=>({id:'z'+l,label:l,name:'',order:i}));
+let S=load(),tab='dishes',draft=null,armed=null,catOpen=false,catView=null,pending=null,bmsg=null;
+function load(){try{const s=JSON.parse(localStorage.getItem(K));if(s&&s.zones){s.categories=s.categories||[];s.plan=s.plan||{dishIds:[],home:[],checked:[]};s.plan.extras=s.plan.extras||[];return s}}catch(e){}
+ return{zones:defZones,categories:[],ingredients:[],dishes:[],plan:{dishIds:[],home:[],checked:[],extras:[]}}}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+const ing=id=>S.ingredients.find(i=>i.id==id);
+const dish=id=>S.dishes.find(d=>d.id==id);
+const cat=id=>S.categories.find(c=>c.id==id);
+function groups(){const g=S.categories.map(c=>({c,l:S.dishes.filter(d=>d.categoryId==c.id)}));const o=S.dishes.filter(d=>!cat(d.categoryId));if(o.length)g.push({c:null,l:o});return g}
+const forms=n=>{n=n.trim().toLowerCase();return[n,n.replace(/s$/,''),n.replace(/es$/,'')]};
+const same=(a,b)=>{const f=forms(b);return forms(a).some(x=>f.includes(x))};
+const zoneOpts=sel=>`<option value="">Zone ?</option>`+[...S.zones].sort((a,b)=>a.order-b.order).map(z=>`<option value="${z.id}" ${z.id==sel?'selected':''}>${esc(z.label)}${z.name?' – '+esc(z.name):''}</option>`).join('');
+
+function items(){const m={};
+ S.plan.dishIds.forEach(did=>{const d=dish(did);if(d)d.ingredientIds.forEach(i=>(m[i]=m[i]||[]).push(d.name))});
+ S.plan.extras.forEach(id=>{if(!m[id])m[id]=[]});
+ return Object.entries(m).map(([id,dn])=>({ing:ing(id),dishes:dn,extra:S.plan.extras.includes(id)})).filter(x=>x.ing)}
+
+function render(){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
+ $('#app').innerHTML={dishes:vDishes,plan:vPlan,list:vList,zones:vZones,backup:vBackup}[tab]();
+}
+function vDishes(){
+ if(draft){
+  const chips=draft.ids.map(id=>{const g=ing(id);return `<span class="chip">${esc(g.name)}<select data-a="zone" data-id="${id}">${zoneOpts(g.zoneId)}</select><button data-a="rmchip" data-id="${id}" aria-label="Remove ${esc(g.name)}">×</button></span>`}).join('');
+  return `<h2>${draft.id?'Edit dish':'New dish'}</h2>
+  ${draft.err?`<p class="err">${esc(draft.err)}</p>`:''}
+  <label class="f">Name<input type="text" id="dn" value="${esc(draft.name)}" placeholder="Chili"></label>
+  <label class="f">Category<select data-a="dcat"><option value="">Choose a category</option>${S.categories.map(c=>`<option value="${c.id}" ${c.id==draft.cat?'selected':''}>${esc(c.name)}</option>`).join('')}</select></label>
+  <label class="f">Calories (kcal), optional<input type="number" inputmode="numeric" min="0" id="dk" value="${esc(draft.kcal)}" placeholder="e.g. 650"></label>
+  <label class="f">Ingredients<input type="text" id="ing" autocomplete="off" placeholder="Type to find or add"></label>
+  <div class="sugg" id="sugg"></div>
+  <div class="chips">${chips||'<span class="mute">No ingredients yet.</span>'}</div>
+  <div class="row"><button class="pri" data-a="savedish">Save dish</button><button data-a="canceldish">Cancel</button></div>`}
+ const card=d=>`<div class="card"><div class="grow"><b>${esc(d.name)}</b><br><small>${d.ingredientIds.length} ingredients${d.kcal!=null?' · '+d.kcal+' kcal':''}</small></div>
+  <button data-a="editdish" data-id="${d.id}">Edit</button>
+  <button class="${armed==d.id?'danger':'ghost'}" data-a="deldish" data-id="${d.id}">${armed==d.id?'Tap to delete':'Delete'}</button></div>`;
+ if(catView){
+  const none=catView=='none',c=cat(catView);
+  if(!none&&!c){catView=null;return vDishes()}
+  const l=S.dishes.filter(d=>none?!cat(d.categoryId):d.categoryId==catView);
+  const arm=!none&&armed=='c'+c.id;
+  return `<button class="ghost back" data-a="back">‹ All categories</button>
+  <h2>${none?'Uncategorised':esc(c.name)}</h2>
+  ${none?'<p class="mute">Open a dish and choose a category for it.</p>':`<button class="pri wide" data-a="newdish" data-id="${c.id}">+ New dish in ${esc(c.name)}</button><div style="height:14px"></div>`}
+  ${l.map(card).join('')||`<p class="empty">No dishes in ${none?'here':esc(c.name)} yet.</p>`}
+  ${none?'':`<details ${arm?'open':''}><summary>Rename or delete this category</summary><div class="zrow cat"><input type="text" data-a="catname" data-id="${c.id}" value="${esc(c.name)}" aria-label="Category name"><button class="${arm?'danger':''}" data-a="catdel" data-id="${c.id}">${arm?'Tap to delete':'Delete'}</button></div><p class="mute">Deleting a category keeps its dishes under Uncategorised.</p></details>`}`}
+ const cnt=n=>`${n} ${n==1?'dish':'dishes'}`;
+ const ov=S.categories.map(c=>`<button class="catcard" data-a="opencat" data-id="${c.id}"><span><b>${esc(c.name)}</b><small>${cnt(S.dishes.filter(d=>d.categoryId==c.id).length)}</small></span><span aria-hidden="true">›</span></button>`).join('');
+ const un=S.dishes.filter(d=>!cat(d.categoryId)).length;
+ return `<h2>Dishes</h2>
+ <h3>Create a category</h3>
+ <div class="zrow cat"><input type="text" id="newcat" placeholder="e.g. Rice, Pasta, Soup" aria-label="New category name"><button class="pri" data-a="catadd">Create</button></div>
+ <h3>Your categories</h3>
+ ${ov||'<p class="empty">No categories yet. Create one above, then open it to add dishes.</p>'}
+ ${un?`<button class="catcard" data-a="opencat" data-id="none"><span><b>Uncategorised</b><small>${cnt(un)}</small></span><span aria-hidden="true">›</span></button>`:''}`}
+function plural(n,a,b){return n+' '+(n==1?a:b)}
+function backupJSON(){return JSON.stringify({app:'store-run',version:1,exportedAt:new Date().toISOString(),data:{zones:S.zones,categories:S.categories,ingredients:S.ingredients,dishes:S.dishes,plan:S.plan}},null,1)}
+function stamp(){S.lastBackup=Date.now();save()}
+async function exportFile(){
+ const json=backupJSON(),name='store-run-backup-'+new Date().toISOString().slice(0,10)+'.json';
+ try{
+  const file=new File([json],name,{type:'application/json'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+   await navigator.share({files:[file],title:'Store run backup'});
+   stamp();bmsg={t:'ok',m:'Backup shared. Keep it somewhere safe, like Files, Drive or an email to yourself.'};render();return}
+ }catch(e){if(e&&e.name=='AbortError')return}
+ try{
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  stamp();bmsg={t:'ok',m:'Backup file downloaded. Look for '+name+' in your downloads.'}
+ }catch(e){bmsg={t:'err',m:'Saving a file did not work here. Use "Copy backup text" instead.'}}
+ render()}
+async function exportText(){
+ try{await navigator.clipboard.writeText(backupJSON());stamp();bmsg={t:'ok',m:'Backup text copied. Paste it into a note or a message to yourself.'}}
+ catch(e){bmsg={t:'err',m:'Copying was blocked. Use "Save backup file" instead.'}}
+ render()}
+function parseBackup(text){
+ let o;try{o=JSON.parse(text.trim())}catch(e){return{err:'That is not a valid backup. Make sure you picked or pasted the whole thing.'}}
+ const d=o&&o.app=='store-run'&&o.data;
+ if(!d||!Array.isArray(d.zones)||!Array.isArray(d.ingredients)||!Array.isArray(d.dishes))return{err:'This does not look like a Store run backup.'};
+ const ok=d.zones.every(x=>x&&typeof x.label=='string')&&d.ingredients.every(x=>x&&typeof x.name=='string')&&d.dishes.every(x=>x&&typeof x.name=='string'&&Array.isArray(x.ingredientIds));
+ if(!ok)return{err:'This backup looks damaged, so nothing was changed.'};
+ const p=d.plan||{},ar=v=>Array.isArray(v)?v:[];
+ return{data:{zones:d.zones,categories:ar(d.categories),ingredients:d.ingredients,dishes:d.dishes,plan:{dishIds:ar(p.dishIds),home:ar(p.home),checked:ar(p.checked),extras:ar(p.extras)}}}}
+function tryImport(text){
+ if(!String(text).trim()){bmsg={t:'err',m:'Paste the backup text first.'};pending=null;render();return}
+ const r=parseBackup(String(text));
+ if(r.err){bmsg={t:'err',m:r.err};pending=null}else{pending=r.data;bmsg=null}
+ render()}
+function vBackup(){
+ const n=S.dishes.length,c=S.categories.length;
+ if(pending){const p=pending;return `<h2>Restore this backup?</h2>
+  <p>The backup contains <b>${plural(p.dishes.length,'dish','dishes')}</b> in <b>${plural(p.categories.length,'category','categories')}</b>.</p>
+  <p>Restoring <b>replaces everything</b> currently on this phone (${plural(n,'dish','dishes')}, ${plural(c,'category','categories')}).</p>
+  <div class="row"><button class="pri" data-a="importgo">Replace with this backup</button><button data-a="importcancel">Cancel</button></div>`}
+ const last=S.lastBackup?new Date(S.lastBackup).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'never';
+ return `<h2>Backup</h2>
+ ${bmsg?`<p class="${bmsg.t=='err'?'err':'ok'}">${esc(bmsg.m)}</p>`:''}
+ <p class="mute">Your dishes are stored only on this phone: ${plural(n,'dish','dishes')}, ${plural(c,'category','categories')}. Last backup: ${last}.</p>
+ <h3>Save a backup</h3>
+ <div class="row"><button class="pri" data-a="exportfile">Save backup file</button><button data-a="exporttext">Copy backup text</button></div>
+ <p class="mute">Save the file to Files, Drive or send it to yourself. Do this after you add or change dishes.</p>
+ <h3>Restore a backup</h3>
+ <label class="f">Choose a backup file<input type="file" data-a="importfile" accept=".json,application/json"></label>
+ <label class="f">Or paste backup text<textarea id="imptext" rows="4" placeholder="Paste the backup text here"></textarea></label>
+ <button data-a="importtext">Check pasted text</button>
+ <p class="mute">You will see a summary and confirm before anything is replaced.</p>`}
+function vPlan(){
+ if(!S.dishes.length)return `<h2>Plan</h2><p class="empty">Add dishes first, then pick this week's here.</p>`;
+ const pd=d=>{const on=S.plan.dishIds.includes(d.id);
+  return `<label class="dish ${on?'on':''}"><input type="checkbox" data-a="plansel" data-id="${d.id}" ${on?'checked':''}><span><b>${esc(d.name)}</b></span>${d.kcal!=null?`<span class="kc">${d.kcal} kcal</span>`:''}</label>`};
+ const out=groups().filter(g=>g.l.length).map(({c,l})=>(c||S.categories.length?`<h3>${c?esc(c.name):'No category'}</h3>`:'')+l.map(pd).join('')).join('');
+ const sel=S.plan.dishIds.map(dish).filter(Boolean),tot=sel.reduce((a,d)=>a+(d.kcal||0),0),miss=sel.filter(d=>d.kcal==null).length;
+ const sum=sel.length?`<div class="total"><span>Total${miss?` <small>(${plural(miss,'dish','dishes')} without calories)</small>`:''}</span><b>${tot.toLocaleString()} kcal</b></div>`:'';
+ return `<h2>This week</h2>${sum}${out}<div class="row"><button data-a="clearplan">Clear plan</button></div>`}
+function vList(){
+ const its=items();
+ const add=`<div class="zrow cat"><input type="text" id="extra" autocomplete="off" placeholder="Add an item, e.g. milk" aria-label="Extra item"><button class="pri" data-a="addextra">Add</button></div>`;
+ if(!its.length)return `<h2>Shopping list</h2>${add}<p class="empty">Pick dishes in Plan and the list appears here.</p>`;
+ const home=S.plan.home,chk=S.plan.checked;
+ const need=its.filter(x=>x.extra||!home.includes(x.ing.id)),at=its.filter(x=>!x.extra&&home.includes(x.ing.id));
+ const zl=[...S.zones].sort((a,b)=>a.order-b.order);
+ const row=(x,u,nosub)=>{const c=chk.includes(x.ing.id),n=x.dishes.length;
+  return `<li class="item ${c?'done':''} ${n>1?'shared':''} ${x.extra?'extra':''}"><label><input type="checkbox" data-a="check" data-id="${x.ing.id}" ${c?'checked':''}><span class="nm"><span>${esc(x.ing.name)}${n>1?`<i class="badge">×${n}</i>`:''}</span>${x.dishes.length&&!nosub?`<small>${esc(x.dishes.join(', '))}</small>`:''}</span></label>
+  ${u||x.extra?`<select data-a="zone" data-id="${x.ing.id}" aria-label="Zone for ${esc(x.ing.name)}">${zoneOpts(x.ing.zoneId)}</select>`:''}${x.extra?`<button class="ghost" data-a="rmextra" data-id="${x.ing.id}">Remove</button>`:`<button class="ghost" data-a="home" data-id="${x.ing.id}">At home</button>`}</li>`};
+ const g=(t,sub,l,u,nosub)=>l.length?`<h3>${t}<small>${esc(sub||'')}</small></h3><ul>${l.map(x=>row(x,u,nosub)).join('')}</ul>`:'';
+ const mode=S.listMode=='dish'?'dish':'zone';
+ const seg=`<div class="seg" role="group" aria-label="Group list by"><button data-a="lmode" data-id="zone" aria-pressed="${mode=='zone'}">By zone</button><button data-a="lmode" data-id="dish" aria-pressed="${mode=='dish'}">By dish</button></div>`;
+ let h;
+ if(mode=='dish'){
+  h=g('Extra items','assign a zone',need.filter(x=>x.extra&&!x.dishes.length),true);
+  S.plan.dishIds.map(dish).filter(Boolean).forEach(d=>h+=g(esc(d.name),'',need.filter(x=>d.ingredientIds.includes(x.ing.id)),false,true));
+ }else{
+  h=g('Extra items','assign a zone',need.filter(x=>x.extra&&!zl.some(z=>z.id==x.ing.zoneId)),true);
+  h+=g('Unsorted','assign a zone',need.filter(x=>!x.extra&&!zl.some(z=>z.id==x.ing.zoneId)),true);
+  zl.forEach(z=>h+=g('Zone '+esc(z.label)+(z.name?' – '+esc(z.name):''),'',need.filter(x=>x.ing.zoneId==z.id),false));
+ }
+ const done=need.filter(x=>chk.includes(x.ing.id)).length;
+ return `<h2>Shopping list</h2><p class="prog">${done} of ${need.length} picked up</p>${seg}${add}${h}
+ ${at.length?`<details><summary>At home (${at.length})</summary>${at.map(x=>`<div class="card"><span class="grow">${esc(x.ing.name)}</span><button data-a="need" data-id="${x.ing.id}">Need it</button></div>`).join('')}</details>`:''}
+ <div class="row"><button data-a="uncheck">Uncheck all</button></div>`}
+function vZones(){
+ const z=[...S.zones].sort((a,b)=>a.order-b.order).map(z=>`<div class="zrow"><input type="text" data-a="zlabel" data-id="${z.id}" value="${esc(z.label)}" aria-label="Zone number"><input type="text" data-a="zname" data-id="${z.id}" value="${esc(z.name)}" placeholder="Name (optional)" aria-label="Zone name">
+ <button data-a="zup" data-id="${z.id}" aria-label="Move up">↑</button><button data-a="zdown" data-id="${z.id}" aria-label="Move down">↓</button><button class="ghost danger" data-a="zdel" data-id="${z.id}" aria-label="Delete zone">×</button></div>`).join('');
+ return `<h2>Zones</h2><p class="mute">Listed in the order they appear on your shopping list. Edit when the store layout changes.</p>${z}<div class="row"><button class="pri" data-a="zadd">Add zone</button></div>`}
+
+function sugg(){const q=$('#ing').value.trim();let h='';
+ if(q){h=S.ingredients.filter(i=>!draft.ids.includes(i.id)&&i.name.toLowerCase().includes(q.toLowerCase())).slice(0,6).map(i=>`<button data-a="pick" data-id="${i.id}">${esc(i.name)}</button>`).join('');
+  if(!S.ingredients.some(i=>same(i.name,q)))h+=`<button class="new" data-a="addnew">Add “${esc(q)}”</button>`}
+ $('#sugg').innerHTML=h}
+function addIng(name){name=name.trim();if(!name)return;
+ let g=S.ingredients.find(i=>same(i.name,name));
+ if(!g){g={id:uid(),name:name[0].toUpperCase()+name.slice(1),zoneId:null};S.ingredients.push(g)}
+ if(!draft.ids.includes(g.id))draft.ids.push(g.id);
+ save();render();$('#ing').focus()}
+function addExtra(name){name=name.trim();if(!name)return;
+ let g=S.ingredients.find(i=>same(i.name,name));
+ if(!g){g={id:uid(),name:name[0].toUpperCase()+name.slice(1),zoneId:null};S.ingredients.push(g)}
+ if(!S.plan.extras.includes(g.id))S.plan.extras.push(g.id);
+ S.plan.checked=S.plan.checked.filter(x=>x!=g.id);
+ save();render();const el=$('#extra');if(el)el.focus()}
+const tog=(arr,id)=>{const i=arr.indexOf(id);i<0?arr.push(id):arr.splice(i,1)};
+function move(id,d){const z=[...S.zones].sort((a,b)=>a.order-b.order),i=z.findIndex(x=>x.id==id),j=i+d;
+ if(j<0||j>=z.length)return;[z[i],z[j]]=[z[j],z[i]];z.forEach((x,k)=>x.order=k)}
+
+function act(a,id){
+ switch(a){
+ case 'newdish':draft={id:null,name:'',ids:[],cat:id||'',kcal:''};break;
+ case 'editdish':{const d=dish(id);draft={id,name:d.name,ids:[...d.ingredientIds],cat:d.categoryId||'',kcal:d.kcal==null?'':d.kcal};break}
+ case 'canceldish':draft=null;break;
+ case 'deldish':if(armed!=id){armed=id;break}
+  S.dishes=S.dishes.filter(d=>d.id!=id);S.plan.dishIds=S.plan.dishIds.filter(x=>x!=id);armed=null;break;
+ case 'savedish':{const n=draft.name.trim();if(!n){draft.err='Give the dish a name.';break}
+  if(!draft.cat){draft.err='Pick a category.';break}
+  const kv=parseFloat(draft.kcal),kcal=isFinite(kv)&&kv>=0?Math.round(kv):null;
+  if(draft.id){const d=dish(draft.id);d.name=n;d.ingredientIds=draft.ids;d.categoryId=draft.cat||null;d.kcal=kcal}else S.dishes.push({id:uid(),name:n,ingredientIds:draft.ids,categoryId:draft.cat||null,kcal});
+  catView=draft.cat;draft=null;break}
+ case 'exportfile':exportFile();return;
+ case 'exporttext':exportText();return;
+ case 'importtext':tryImport(($('#imptext')||{}).value||'');return;
+ case 'importgo':S.zones=pending.zones;S.categories=pending.categories;S.ingredients=pending.ingredients;S.dishes=pending.dishes;S.plan=pending.plan;pending=null;catView=null;draft=null;bmsg={t:'ok',m:'Backup restored.'};break;
+ case 'importcancel':pending=null;break;
+ case 'opencat':catView=id;break;
+ case 'back':catView=null;break;
+ case 'catadd':{const n=$('#newcat').value.trim();if(n&&!S.categories.some(c=>c.name.toLowerCase()==n.toLowerCase()))S.categories.push({id:uid(),name:n});catOpen=true;save();render();$('#newcat')&&$('#newcat').focus();return}
+ case 'catdel':if(armed!='c'+id){armed='c'+id;break}S.categories=S.categories.filter(c=>c.id!=id);if(catView==id)catView=null;armed=null;S.dishes.forEach(d=>{if(d.categoryId==id)d.categoryId=null});break;
+ case 'pick':addIng(ing(id).name);return;
+ case 'addnew':addIng($('#ing').value);return;
+ case 'rmchip':draft.ids=draft.ids.filter(x=>x!=id);break;
+ case 'addextra':addExtra(($('#extra')||{}).value||'');return;
+ case 'lmode':S.listMode=id=='dish'?'dish':'zone';break;
+ case 'rmextra':S.plan.extras=S.plan.extras.filter(x=>x!=id);S.plan.checked=S.plan.checked.filter(x=>x!=id);break;
+ case 'clearplan':S.plan={dishIds:[],home:[],checked:[],extras:[]};break;
+ case 'home':if(!S.plan.home.includes(id))S.plan.home.push(id);break;
+ case 'need':S.plan.home=S.plan.home.filter(x=>x!=id);break;
+ case 'uncheck':S.plan.checked=[];break;
+ case 'zup':move(id,-1);break;
+ case 'zdown':move(id,1);break;
+ case 'zdel':S.zones=S.zones.filter(z=>z.id!=id);S.ingredients.forEach(i=>{if(i.zoneId==id)i.zoneId=null});break;
+ case 'zadd':S.zones.push({id:uid(),label:'New',name:'',order:S.zones.length});break;
+ default:return}
+ save();render()}
+
+document.addEventListener('click',e=>{
+ const t=e.target.closest('nav button');if(t){if(t.dataset.t!='backup'){pending=null;bmsg=null}if(t.dataset.t=='dishes'&&tab=='dishes'&&!draft)catView=null;tab=t.dataset.t;armed=null;render();window.scrollTo(0,0);return}
+ const b=e.target.closest('button[data-a]');if(b){if(!['deldish','catdel'].includes(b.dataset.a))armed=null;act(b.dataset.a,b.dataset.id)}});
+document.addEventListener('change',e=>{const a=e.target.dataset.a,id=e.target.dataset.id;
+ if(a=='zone'){ing(id).zoneId=e.target.value||null;save();if(tab=='list')render()}
+ else if(a=='importfile'){const f=e.target.files&&e.target.files[0];e.target.value='';if(f)f.text().then(tryImport).catch(()=>{bmsg={t:'err',m:'Could not read that file.'};render()})}
+ else if(a=='dcat'){draft.cat=e.target.value}
+ else if(a=='plansel'){tog(S.plan.dishIds,id);save();render()}
+ else if(a=='check'){tog(S.plan.checked,id);save();render()}});
+document.addEventListener('input',e=>{const t=e.target,a=t.dataset.a;
+ if(t.id=='dn')draft.name=t.value;else if(t.id=='dk')draft.kcal=t.value;
+ else if(t.id=='ing')sugg();
+ else if(a=='zlabel'){S.zones.find(z=>z.id==t.dataset.id).label=t.value;save()}
+ else if(a=='zname'){S.zones.find(z=>z.id==t.dataset.id).name=t.value;save()}
+ else if(a=='catname'){const c=cat(t.dataset.id);if(c){c.name=t.value;save()}}});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.id=='ing'){e.preventDefault();addIng(e.target.value)}
+ if(e.key=='Enter'&&e.target.id=='newcat'){e.preventDefault();act('catadd')}
+ if(e.key=='Enter'&&e.target.id=='extra'){e.preventDefault();addExtra(e.target.value)}});
+document.addEventListener('toggle',e=>{if(e.target.id=='catbox')catOpen=e.target.open},true);
+render();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
